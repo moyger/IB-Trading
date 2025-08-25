@@ -5,7 +5,7 @@ from datetime import datetime
 
 def download_sp500_constituents():
     """Download current S&P 500 constituents from GitHub dataset"""
-    url = "https://raw.githubusercontent.com/datasets/s-and-p-500-companies/master/data/constituents.csv"
+    url = "1"
     
     try:
         response = requests.get(url)
