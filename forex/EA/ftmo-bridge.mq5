@@ -402,7 +402,7 @@ string MapSymbol(string tv_symbol)
    // if(StringFind(tv_symbol, "USD") >= 0) return tv_symbol + ".a";
    
    // Metals and indices
-   if(tv_symbol == "XAUUSD") return "GOLD";
+   if(tv_symbol == "XAUUSD") return "XAUUSD";  // Keep original symbol for this broker
    if(tv_symbol == "XAGUSD") return "SILVER";
    if(tv_symbol == "US30") return "DJ30";
    if(tv_symbol == "SPX500") return "SP500";
