@@ -77,3 +77,5 @@ Different Market Regimes: Trending, ranging, high-vol, low-vol periods.
 
 - Always backtest strategies in 24 months period August 2023 to  July 2025
 - When we do a backtest, create a log in markdown format in /backtest-logs 
+
+- the backtest should always include a monthly summary with P&L amount and percentage, running balance and number of trades
