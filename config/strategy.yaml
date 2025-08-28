@@ -1,0 +1,79 @@
+# Strategy Configuration
+
+# Active strategies
+strategies:
+  btcusdt_ftmo:
+    enabled: true
+    timeframe: "1h"
+    symbols: ["BTCUSDT", "ETHUSDT"]
+    risk_per_trade: 0.01
+    max_positions: 3
+    parameters:
+      confluence_threshold: 4
+      atr_period: 14
+      atr_multiplier: 2.0
+      volume_threshold: 1.5
+      
+  arthur_hill_trend:
+    enabled: true
+    timeframe: "4h"
+    symbols: ["BTCUSDT", "ETHUSDT", "ADAUSDT"]
+    risk_per_trade: 0.015
+    max_positions: 2
+    parameters:
+      trend_period: 50
+      momentum_period: 14
+      volume_confirmation: true
+      
+  multi_confluence:
+    enabled: false
+    timeframe: "1d"
+    symbols: ["BTCUSDT"]
+    risk_per_trade: 0.02
+    max_positions: 1
+    parameters:
+      ma_fast: 21
+      ma_slow: 50
+      rsi_period: 14
+      rsi_oversold: 30
+      rsi_overbought: 70
+
+# Strategy scheduling
+scheduling:
+  mode: "continuous"  # continuous, scheduled, manual
+  market_hours_only: false
+  weekends: false
+  holidays: []
+  
+# Data requirements
+data:
+  min_history: 500     # Minimum bars for strategy initialization
+  update_frequency: 60  # Seconds between data updates
+  data_sources: ["yfinance", "bybit", "interactive_brokers"]
+  
+# Backtesting settings
+backtest:
+  start_date: "2023-08-01"
+  end_date: "2025-07-31"
+  initial_capital: 100000
+  commission: 0.001
+  slippage: 0.0005
+  
+# Performance targets
+targets:
+  annual_return: 0.15      # 15% annual target
+  max_drawdown: 0.10       # 10% max drawdown
+  sharpe_ratio: 1.5        # Target Sharpe ratio
+  win_rate: 0.60          # Target win rate
+  profit_factor: 1.8       # Target profit factor
+
+# Optimization
+optimization:
+  enabled: true
+  method: "walk_forward"   # walk_forward, genetic, grid_search
+  lookback_months: 12
+  reoptimize_frequency: 90  # Days
+  parameters_to_optimize:
+    - "confluence_threshold"
+    - "atr_multiplier"
+    - "volume_threshold"

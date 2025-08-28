@@ -1,0 +1,56 @@
+# Production Environment Configuration
+
+environment: "production"
+
+# Logging
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "logs/edgerunner_prod.log"
+  max_size: "50MB"
+  backup_count: 10
+  console: false
+
+# Database
+database:
+  type: "postgresql"
+  host: "localhost"
+  port: 5432
+  database: "edgerunner"
+  echo: false
+
+# Redis cache
+cache:
+  enabled: true
+  host: "localhost"
+  port: 6379
+  db: 1
+
+# API settings
+api:
+  enabled: true
+  host: "0.0.0.0"
+  port: 8000
+  debug: false
+  reload: false
+  workers: 4
+
+# Monitoring
+monitoring:
+  enabled: true
+  heartbeat_interval: 10
+  metrics_port: 9090
+  alerts_enabled: true
+  slack_webhook: ""  # Set in secrets
+  
+# Security
+security:
+  api_key_required: true
+  rate_limiting: true
+  max_requests_per_minute: 100
+  
+# Performance
+performance:
+  max_workers: 8
+  batch_size: 1000
+  async_execution: true

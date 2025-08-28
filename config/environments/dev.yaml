@@ -1,0 +1,45 @@
+# Development Environment Configuration
+
+environment: "development"
+
+# Logging
+logging:
+  level: "DEBUG"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "logs/edgerunner_dev.log"
+  max_size: "10MB"
+  backup_count: 5
+  console: true
+
+# Database
+database:
+  type: "sqlite"
+  path: "data/edgerunner_dev.db"
+  echo: true  # SQL query logging
+
+# Redis cache
+cache:
+  enabled: false
+  host: "localhost"
+  port: 6379
+  db: 0
+
+# API settings
+api:
+  enabled: true
+  host: "127.0.0.1"
+  port: 8000
+  debug: true
+  reload: true
+
+# Monitoring
+monitoring:
+  enabled: true
+  heartbeat_interval: 30
+  metrics_port: 9090
+  
+# Testing
+testing:
+  paper_trading: true
+  mock_data: true
+  fast_mode: true

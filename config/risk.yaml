@@ -1,0 +1,53 @@
+# Risk Management Configuration
+
+# Position sizing methods
+position_sizing:
+  method: "kelly"  # kelly, fixed, percentage, volatility
+  kelly_lookback: 252  # Days for Kelly calculation
+  kelly_fraction: 0.25  # Conservative Kelly fraction
+  max_kelly: 0.1       # Cap Kelly at 10%
+  min_position: 0.01   # Minimum 1% position
+  max_position: 0.05   # Maximum 5% position
+
+# Risk limits
+risk_limits:
+  # Portfolio level
+  max_portfolio_risk: 0.20      # 20% portfolio VAR
+  max_sector_exposure: 0.30     # 30% max in any sector
+  max_single_position: 0.05     # 5% max single position
+  max_correlation: 0.7          # Max correlation between positions
+  
+  # Daily limits
+  max_daily_loss: 0.03         # 3% max daily loss
+  max_daily_var: 0.02          # 2% daily VAR
+  max_drawdown: 0.15           # 15% max drawdown before halt
+  
+  # FTMO compliance
+  ftmo_compliant: true
+  ftmo_daily_loss: 0.05        # 5% FTMO daily loss limit
+  ftmo_total_loss: 0.10        # 10% FTMO total loss limit
+  ftmo_profit_target: 0.10     # 10% profit target
+
+# Risk metrics calculation
+metrics:
+  var_confidence: 0.95         # 95% VaR confidence
+  expected_shortfall: 0.99     # 99% Expected Shortfall
+  lookback_window: 252         # Days for risk calculations
+  decay_factor: 0.94           # Exponential decay for volatility
+
+# Stop loss and take profit
+stops:
+  use_stops: true
+  stop_method: "atr"           # atr, percentage, fixed
+  atr_multiplier: 2.0          # ATR stop multiplier
+  trailing_stop: true
+  profit_target_ratio: 2.0    # Risk:Reward ratio
+
+# Guards and circuit breakers
+guards:
+  max_trades_per_day: 10
+  max_orders_per_minute: 5
+  cool_down_period: 300        # Seconds after max loss hit
+  emergency_stop: true
+  volatility_filter: true
+  liquidity_filter: true

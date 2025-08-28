@@ -1,0 +1,40 @@
+# Broker Configuration
+# Multi-venue execution support
+
+interactive_brokers:
+  enabled: true
+  host: "127.0.0.1"
+  port: 7497  # TWS: 7497, IB Gateway: 4002
+  client_id: 1
+  account: ""  # Set in secrets
+  paper_trading: true
+  timeout: 30
+  
+bybit:
+  enabled: true
+  testnet: true
+  api_key: ""  # Set in secrets
+  api_secret: ""  # Set in secrets
+  base_url: "https://api-testnet.bybit.com"
+  
+mt5:
+  enabled: false
+  server: ""  # MetaTrader 5 server
+  login: 0
+  password: ""  # Set in secrets
+  timeout: 60000
+
+# Execution settings
+execution:
+  default_broker: "interactive_brokers"
+  order_timeout: 30
+  retry_attempts: 3
+  slippage_model: "realistic"
+  commission_model: "tiered"
+
+# Risk limits per broker
+risk_limits:
+  max_position_size: 100000  # USD
+  max_daily_loss: 5000       # USD
+  max_positions: 10
+  max_correlation: 0.7
