@@ -1,0 +1,201 @@
+# Strategy Configuration
+# Organized by asset class with broker routing
+
+# Forex Strategies
+forex:
+  xauusd_ftmo_1h:
+    name: "XAUUSD FTMO 1H Enhanced"
+    description: "FTMO-compliant gold trading strategy with 1H timeframe"
+    enabled: true
+    symbol: "XAUUSD"
+    timeframe: "1h"
+    broker: "mt5"  # Routes to MT5 via webhook
+    
+    # Risk management (FTMO compliant)
+    risk:
+      max_daily_loss_pct: 5.0
+      max_overall_loss_pct: 10.0
+      daily_loss_cutoff_pct: 1.5
+      max_risk_per_trade: 2.0
+      emergency_stop_pct: 0.8
+    
+    # Position sizing
+    position_sizing:
+      method: "risk_based"  # fixed, risk_based, equity_percent
+      risk_per_trade: 1.25
+      max_position_size: 100000
+      min_position_size: 1000
+    
+    # Strategy parameters
+    parameters:
+      atr_period: 14
+      atr_stop_multiplier: 2.0
+      atr_target_multiplier: 3.0
+      min_trend_strength: 3.0
+      signal_cooldown: 300  # seconds
+      max_daily_signals: 10
+      
+    # Broker-specific settings
+    mt5:
+      account_key: "XAUUSD_FTMO_LIVE"
+      magic_number: 123457
+      symbol_mapping: "XAUUSD"
+
+# Crypto Strategies  
+crypto:
+  btcusdt_ftmo_1h:
+    name: "BTCUSDT FTMO 1H"
+    description: "Bitcoin FTMO-style strategy with 1H momentum"
+    enabled: true
+    symbol: "BTCUSDT"
+    timeframe: "1h"
+    broker: "bybit"  # Can also route to MT5
+    
+    # Risk management
+    risk:
+      max_daily_loss_pct: 3.0
+      max_risk_per_trade: 1.5
+      emergency_stop_pct: 2.0
+    
+    # Strategy parameters
+    parameters:
+      trend_lookback: 20
+      momentum_threshold: 0.02
+      volume_confirmation: true
+      
+    # Multi-broker support
+    bybit:
+      symbol_mapping: "BTCUSDT"
+      leverage: 1  # Spot trading
+    
+    mt5:
+      account_key: "CRYPTO_LIVE"
+      symbol_mapping: "BTCUSD"
+      magic_number: 123458
+
+  btcusdt_enhanced:
+    name: "BTCUSDT Enhanced"
+    description: "Enhanced Bitcoin strategy with multiple confirmations"
+    enabled: true
+    symbol: "BTCUSDT"
+    timeframe: "4h"
+    broker: "bybit"
+    
+    parameters:
+      confirmation_signals: 3
+      min_volume_ratio: 1.5
+      rsi_oversold: 30
+      rsi_overbought: 70
+
+  arthur_hill_trend:
+    name: "Arthur Hill Trend"
+    description: "Trend-following system based on Arthur Hill methodology"
+    enabled: false  # Disabled by default
+    symbol: "BTCUSDT"
+    timeframe: "4h"
+    broker: "bybit"
+    
+    parameters:
+      trend_ma_fast: 20
+      trend_ma_slow: 50
+      volume_ma: 20
+      min_trend_duration: 5
+
+# Stock Strategies
+stocks:
+  mtum_momentum:
+    name: "MTUM Momentum ETF"
+    description: "Momentum factor ETF strategy"
+    enabled: false
+    symbol: "MTUM"
+    timeframe: "1d"
+    broker: "interactive_brokers"
+    
+    # Risk management for stocks
+    risk:
+      max_position_pct: 20.0  # Max 20% of portfolio
+      stop_loss_pct: 8.0      # 8% stop loss
+      take_profit_pct: 15.0   # 15% take profit
+    
+    parameters:
+      momentum_lookback: 60
+      rebalance_frequency: "weekly"
+      min_liquidity: 1000000  # $1M daily volume
+      
+    interactive_brokers:
+      symbol_mapping: "MTUM"
+      currency: "USD"
+
+  sp500_momentum:
+    name: "S&P 500 Momentum"
+    description: "S&P 500 momentum rotation strategy"
+    enabled: false
+    symbol: "SPY"
+    timeframe: "1d"
+    broker: "interactive_brokers"
+    
+    parameters:
+      top_n_stocks: 50
+      rebalance_frequency: "monthly"
+      momentum_period: 126  # 6 months
+
+# Index Strategies
+indices:
+  spx_breakout:
+    name: "SPX Breakout"
+    description: "S&P 500 breakout strategy"
+    enabled: false
+    symbol: "SPX"
+    timeframe: "4h"
+    broker: "interactive_brokers"
+    
+    parameters:
+      breakout_period: 20
+      volume_confirmation: true
+      min_breakout_pct: 1.0
+
+# Global Strategy Settings
+global:
+  # Default risk settings
+  default_risk:
+    max_concurrent_positions: 3
+    max_correlation: 0.7
+    position_timeout: 86400  # 24 hours
+  
+  # Monitoring settings
+  monitoring:
+    health_check_interval: 300  # 5 minutes
+    performance_tracking: true
+    alert_on_drawdown: 5.0  # Alert on 5% drawdown
+  
+  # Execution settings
+  execution:
+    order_timeout: 30
+    retry_attempts: 3
+    slippage_tolerance: 0.001  # 0.1%
+
+# Strategy Routing Rules
+routing:
+  # Route strategies to specific brokers
+  broker_routing:
+    forex: "mt5"
+    crypto: "bybit"
+    stocks: "interactive_brokers"
+    indices: "interactive_brokers"
+  
+  # Fallback brokers
+  fallbacks:
+    mt5: "interactive_brokers"  # If MT5 unavailable
+    bybit: "mt5"               # If Bybit unavailable
+  
+  # Account routing
+  account_routing:
+    production:
+      forex: "FTMO_LIVE"
+      crypto: "CRYPTO_LIVE"
+      stocks: "STOCK_LIVE"
+    
+    testing:
+      forex: "FTMO_TEST"
+      crypto: "CRYPTO_TEST"
+      stocks: "STOCK_TEST"

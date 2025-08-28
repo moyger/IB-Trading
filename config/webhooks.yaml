@@ -1,0 +1,134 @@
+# Webhook Configuration for Edgerunner Framework
+# Integrates existing Cloudflare Worker and local webhook infrastructure
+
+cloudflare_webhook:
+  # Production Cloudflare Worker (existing infrastructure)
+  enabled: true
+  base_url: "https://tradingview-webhook.karloestrada.workers.dev"
+  endpoints:
+    enqueue: "/enqueue"
+    dequeue: "/dequeue" 
+    status: "/status"
+  
+  # Authentication
+  webhook_secret: "${CLOUDFLARE_WEBHOOK_SECRET}"
+  api_token: "${CLOUDFLARE_API_TOKEN}"
+  
+  # Request settings
+  timeout_seconds: 10
+  retry_attempts: 3
+  retry_delay: 5
+  
+  # Account configurations
+  accounts:
+    production:
+      account_key: "EDGERUNNER_PROD"
+      max_daily_signals: 20
+      risk_per_signal: 1.0
+    
+    testing:
+      account_key: "EDGERUNNER_TEST" 
+      max_daily_signals: 50
+      risk_per_signal: 0.5
+    
+    conservative:
+      account_key: "EDGERUNNER_CONSERVATIVE"
+      max_daily_signals: 10
+      risk_per_signal: 0.75
+
+local_webhook:
+  # Local backup webhook server
+  enabled: false  # Enable for development/backup
+  host: "0.0.0.0"
+  port: 5000
+  
+  # Queue management
+  max_queue_size: 100
+  signal_history_limit: 1000
+  
+  # MT5 forwarding
+  mt5_bridge_url: ""  # Set to forward signals to MT5
+  forward_enabled: false
+
+# MT5 Webhook Bridge Configuration
+mt5_bridge:
+  # EA Bridge settings (matches ftmo-bridge.mq5)
+  magic_numbers:
+    default: 123456
+    edgerunner: 123457
+    testing: 123458
+  
+  # Position sizing
+  position_sizing:
+    use_fixed_lot: false
+    fixed_lot_size: 0.01
+    use_equity_percent: true
+    equity_percent: 1.0  # 1% of equity per trade
+    max_lot_size: 0.10
+    min_lot_size: 0.01
+  
+  # Symbol mapping (TradingView → MT5)
+  symbol_mapping:
+    # Crypto
+    "BTCUSDT": "BTCUSD"
+    "ETHUSDT": "ETHUSD"
+    "XRPUSDT": "XRPUSD"
+    "ADAUSDT": "ADAUSD"
+    
+    # Forex
+    "EURUSD": "EURUSD"
+    "GBPUSD": "GBPUSD" 
+    "USDJPY": "USDJPY"
+    "AUDUSD": "AUDUSD"
+    
+    # Metals
+    "XAUUSD": "XAUUSD"  # Gold
+    "XAGUSD": "XAGUSD"  # Silver
+    
+    # Indices
+    "SPX500": "SP500"
+    "US30": "DJ30"
+    "NAS100": "NAS100"
+  
+  # Risk management (FTMO compliance)
+  risk_management:
+    max_daily_risk: 1.5      # % of account per day
+    emergency_daily_limit: 0.8  # Emergency stop %
+    overall_emergency_limit: 5.0  # Overall drawdown limit %
+    max_daily_trades: 15
+    signal_cooldown: 300     # Seconds between signals
+
+# Webhook routing configuration
+routing:
+  # Route strategies to different webhook endpoints
+  strategy_routing:
+    "btcusdt_ftmo":
+      webhook: "cloudflare_webhook"
+      account: "production"
+      
+    "arthur_hill_trend":
+      webhook: "cloudflare_webhook" 
+      account: "conservative"
+      
+    "multi_confluence":
+      webhook: "local_webhook"
+      account: "testing"
+  
+  # Fallback configuration
+  fallback:
+    primary: "cloudflare_webhook"
+    secondary: "local_webhook"
+    retry_on_failure: true
+
+# Monitoring and alerting
+monitoring:
+  webhook_health_check: true
+  health_check_interval: 300  # seconds
+  
+  # Alert thresholds
+  alert_on_failure: true
+  max_consecutive_failures: 3
+  
+  # Logging
+  log_all_webhooks: true
+  log_level: "INFO"  # DEBUG, INFO, WARNING, ERROR

@@ -18,11 +18,34 @@ bybit:
   base_url: "https://api-testnet.bybit.com"
   
 mt5:
-  enabled: false
-  server: ""  # MetaTrader 5 server
-  login: 0
-  password: ""  # Set in secrets
-  timeout: 60000
+  enabled: true
+  # Webhook bridge configuration (integrates existing infrastructure)
+  webhook_url: "https://tradingview-webhook.karloestrada.workers.dev"
+  account_key: "EDGERUNNER_MT5"
+  webhook_secret: ""  # Set in secrets if required
+  timeout: 10
+  
+  # Magic number for EA identification
+  magic_number: 123456
+  
+  # Position sizing settings (matches ftmo-bridge.mq5)
+  use_fixed_lot: false
+  fixed_lot_size: 0.01
+  use_equity_percent: true
+  equity_percent: 1.0  # 1% of equity per trade
+  max_lot_size: 0.10
+  min_lot_size: 0.01
+  
+  # Symbol mapping (Edgerunner → MT5)
+  symbol_mapping:
+    "BTCUSDT": "BTCUSD"
+    "ETHUSDT": "ETHUSD"
+    "XRPUSDT": "XRPUSD"
+    "XAUUSD": "XAUUSD"  # Gold
+    "XAGUSD": "XAGUSD"  # Silver
+    "EURUSD": "EURUSD"
+    "GBPUSD": "GBPUSD"
+    "USDJPY": "USDJPY"
 
 # Execution settings
 execution:
