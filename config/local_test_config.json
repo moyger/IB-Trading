@@ -1,0 +1,132 @@
+{
+  "testing_mode": "live_multi_market",
+  "max_position_size_usd": 100,
+  "max_daily_risk_usd": 200,
+  "emergency_stop_loss_pct": 5.0,
+  
+  "brokers": {
+    "ibkr": {
+      "enabled": true,
+      "mode": "paper",
+      "capital": 10000,
+      "api_gateway": "127.0.0.1:7497",
+      "max_position_size": 100,
+      "client_id": 1,
+      "account_id": "DU123456",
+      "connection_timeout": 30
+    },
+    "bybit": {
+      "enabled": true,
+      "mode": "live",
+      "capital": 500,
+      "testnet": false,
+      "api_key": "FH6xFg2vJKuPVbT4fx",
+      "api_secret": "HcUi9SEvsTeyEbYJqUwqtrbNXmIC99Z32SCB",
+      "base_url": "https://api.bybit.com",
+      "max_position_size": 50,
+      "max_daily_loss": 20,
+      "emergency_stop_loss": 10,
+      "allowed_symbols": ["BTCUSDT", "ETHUSDT", "SOLUSDT"],
+      "position_size_limit": 0.001,
+      "safety_mode": true,
+      "min_balance_threshold": 100
+    },
+    "mt5_ftmo": {
+      "enabled": true,
+      "mode": "live",
+      "capital": 100000,
+      "server": "FTMO-Server",
+      "login": "510063127",
+      "password": "MD4@98r4X",
+      "max_position_size": 500,
+      "max_daily_loss": 5000,
+      "emergency_stop_loss": 8000,
+      "allowed_symbols": ["AUDNZD"],
+      "position_size_limit": 0.10,
+      "ftmo_rules": {
+        "max_daily_loss_pct": 5.0,
+        "max_total_drawdown_pct": 10.0,
+        "profit_target_pct": 10.0,
+        "min_trading_days": 10
+      },
+      "path": "/Applications/MetaTrader 5/MetaTrader 5.app",
+      "safety_mode": true,
+      "webhook_url": "https://tradingview-webhook.karloestrada.workers.dev",
+      "webhook_secret": "k9P$Xz83!vW@b12N#rTe",
+      "account_key": "FTMO_LIVE_510063127",
+      "magic_number": 123456
+    }
+  },
+  
+  "safety_limits": {
+    "max_trades_per_hour": 10,
+    "max_trades_per_day": 100,
+    "max_total_loss_usd": 500,
+    "max_drawdown_pct": 8.0,
+    "max_consecutive_losses": 5,
+    "auto_shutdown_conditions": [
+      "consecutive_losses >= 5",
+      "drawdown_pct >= 8.0",
+      "api_errors >= 15",
+      "total_loss_usd >= 500",
+      "ftmo_daily_loss_breach",
+      "ftmo_total_drawdown_breach"
+    ],
+    "trading_hours": {
+      "start": "06:00",
+      "end": "22:00",
+      "timezone": "UTC",
+      "weekends_enabled": false
+    }
+  },
+  
+  "monitoring": {
+    "log_level": "INFO",
+    "status_update_interval": 15,
+    "performance_check_interval": 180,
+    "health_check_interval": 30,
+    "save_trades_to_file": true,
+    "real_time_alerts": true,
+    "alert_conditions": [
+      "large_loss >= 50",
+      "api_connection_lost",
+      "unusual_activity",
+      "risk_limit_approached",
+      "ftmo_rule_violation",
+      "crypto_volatility_spike"
+    ],
+    "market_specific": {
+      "crypto": {
+        "volatility_threshold": 5.0,
+        "price_change_alert": 3.0,
+        "volume_spike_threshold": 200
+      },
+      "forex": {
+        "ftmo_monitoring": true,
+        "daily_loss_tracking": true,
+        "drawdown_alerts": true,
+        "news_event_pause": true
+      }
+    }
+  },
+  
+  "strategies": {
+    "enabled_strategies": [
+      "arthur_hill_mtf",
+      "ernest_chan_mean_reversion_ftmo"
+    ],
+    "position_sizing": {
+      "method": "fixed_dollar",
+      "base_size": 50,
+      "max_size": 100,
+      "risk_per_trade": 0.02
+    }
+  },
+  
+  "data_sources": {
+    "primary": "broker_api",
+    "backup": "yahoo_finance",
+    "update_frequency": 60,
+    "cache_enabled": true
+  }
+}
